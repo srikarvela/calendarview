@@ -6,7 +6,7 @@
 
 **Your day, full screen.**
 
-[![Download](https://img.shields.io/badge/Download-CalendarView%201.1.0.dmg-8ab4f8?style=for-the-badge&labelColor=0e1015)](https://github.com/srikarvela/calendarview/releases/latest)
+[![Download](https://img.shields.io/badge/Download-CalendarView%201.1.1.dmg-5b9dff?style=for-the-badge&labelColor=0e1015)](https://github.com/srikarvela/calendarview/releases/latest)
 &nbsp;
 [![Free](https://img.shields.io/badge/Free-1c1f27?style=for-the-badge&labelColor=1c1f27)](#)
 
@@ -16,7 +16,7 @@
 <table>
 <tr>
 <td align="center" width="150"><sub><b>KIND</b></sub><br><br><b>Universal</b><br><sub>Apple Silicon · Intel</sub></td>
-<td align="center" width="150"><sub><b>VERSION</b></sub><br><br><b>1.1.0</b><br><sub>August 2026</sub></td>
+<td align="center" width="150"><sub><b>VERSION</b></sub><br><br><b>1.1.1</b><br><sub>August 2026</sub></td>
 <td align="center" width="150"><sub><b>REQUIRES</b></sub><br><br><b>macOS 11</b><br><sub>or later</sub></td>
 <td align="center" width="150"><sub><b>CATEGORY</b></sub><br><br><b>Productivity</b><br><sub>Calendar</sub></td>
 <td align="center" width="150"><sub><b>LANGUAGE</b></sub><br><br><b>EN</b><br><sub>English</sub></td>
@@ -66,7 +66,7 @@ else.</sub>
 
 ## Install
 
-Download [`CalendarView-1.1.0.dmg`](https://github.com/srikarvela/calendarview/releases/latest),
+Download [`CalendarView-1.1.1.dmg`](https://github.com/srikarvela/calendarview/releases/latest),
 open it, drag **CalendarView** to Applications.
 
 The app is signed ad-hoc rather than with a paid Apple Developer certificate, so the first launch

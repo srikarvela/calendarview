@@ -9,8 +9,8 @@ cd "$(dirname "$0")"
 
 APP_NAME="CalendarView"
 BUNDLE_ID="com.calendarview.app"
-VERSION="${VERSION:-1.1.0}"
-BUILD_NUM="${BUILD_NUM:-2}"
+VERSION="${VERSION:-1.1.1}"
+BUILD_NUM="${BUILD_NUM:-3}"
 MIN_MACOS="11.0"
 
 BUILD="build"

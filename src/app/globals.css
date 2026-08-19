@@ -14,7 +14,7 @@ html,
 body {
   height: 100%;
   background: var(--color-void);
-  color: #e8eaed;
+  color: #f2f5f9;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -41,7 +41,7 @@ body {
 }
 
 ::selection {
-  background: rgba(138, 180, 248, 0.25);
+  background: rgba(91, 157, 255, 0.35);
 }
 
 @keyframes rise {

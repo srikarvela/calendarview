@@ -47,7 +47,7 @@ export default function WeekView({
   return (
     <div className="flex h-full min-h-0 flex-col">
       {/* Day headers */}
-      <div className="grid shrink-0 grid-cols-[3.4rem_repeat(7,minmax(0,1fr))] border-b border-white/[0.06]">
+      <div className="grid shrink-0 grid-cols-[3.4rem_repeat(7,minmax(0,1fr))] border-b border-white/[0.1]">
         <div />
         {days.map((d) => {
           const isToday = dayKey(d) === todayKey;
@@ -55,14 +55,14 @@ export default function WeekView({
             <div key={d.toISOString()} className="px-2 pb-2.5 pt-1 text-center">
               <div
                 className={`text-[0.62rem] font-medium tracking-[0.16em] ${
-                  isToday ? "text-[#8ab4f8]" : "text-white/28"
+                  isToday ? "text-[#5b9dff]" : "text-white/45"
                 }`}
               >
                 {d.toLocaleDateString(undefined, { weekday: "short" }).toUpperCase()}
               </div>
               <div
-                className={`nums mx-auto mt-1.5 flex h-8 w-8 items-center justify-center rounded-full text-[1.05rem] font-light transition-colors ${
-                  isToday ? "bg-[#8ab4f8] text-[#06070a]" : "text-white/70"
+                className={`nums mx-auto mt-1.5 flex h-8 w-8 items-center justify-center rounded-full text-[1.05rem] font-normal transition-colors ${
+                  isToday ? "bg-[#5b9dff] text-[#06070a] shadow-[0_0_20px_#5b9dff80]" : "text-white/85"
                 }`}
               >
                 {d.getDate()}
@@ -74,8 +74,8 @@ export default function WeekView({
 
       {/* All-day band */}
       {hasAllDay && (
-        <div className="grid shrink-0 grid-cols-[3.4rem_repeat(7,minmax(0,1fr))] border-b border-white/[0.06] py-1.5">
-          <div className="whitespace-nowrap pr-2 text-right text-[0.55rem] font-medium leading-6 tracking-[0.1em] text-white/25">
+        <div className="grid shrink-0 grid-cols-[3.4rem_repeat(7,minmax(0,1fr))] border-b border-white/[0.1] py-1.5">
+          <div className="whitespace-nowrap pr-2 text-right text-[0.55rem] font-medium leading-6 tracking-[0.1em] text-white/45">
             ALL-DAY
           </div>
           {allDayRows.map((row, i) => (
@@ -86,9 +86,9 @@ export default function WeekView({
                   title={e.title}
                   className="truncate rounded-md px-2 py-[3px] text-[0.72rem] font-normal"
                   style={{
-                    background: `${e.color}26`,
+                    background: `${e.color}33`,
                     color: e.color,
-                    boxShadow: `inset 0 0 0 1px ${e.color}33`,
+                    boxShadow: `inset 0 0 0 1px ${e.color}66, 0 0 14px ${e.color}26`,
                   }}
                 >
                   {e.title}
@@ -110,7 +110,7 @@ export default function WeekView({
             {hours.map((h, i) => (
               <div
                 key={h}
-                className="nums absolute right-2 -translate-y-1/2 text-[0.62rem] font-light tracking-[0.06em] text-white/30"
+                className="nums absolute right-2 -translate-y-1/2 text-[0.62rem] font-light tracking-[0.06em] text-white/45"
                 style={{ top: i * HOUR_PX }}
               >
                 {i === 0 ? "" : label(h)}
@@ -121,16 +121,16 @@ export default function WeekView({
           {days.map((d, di) => (
             <div
               key={d.toISOString()}
-              className="relative border-l border-white/[0.05]"
+              className="relative border-l border-white/[0.08]"
               style={{
                 background:
-                  dayKey(d) === todayKey ? "linear-gradient(#8ab4f80f,#8ab4f80f)" : undefined,
+                  dayKey(d) === todayKey ? "linear-gradient(#5b9dff14,#5b9dff14)" : undefined,
               }}
             >
               {hours.map((h, i) => (
                 <div
                   key={h}
-                  className="absolute inset-x-0 border-t border-white/[0.045]"
+                  className="absolute inset-x-0 border-t border-white/[0.07]"
                   style={{ top: i * HOUR_PX }}
                 />
               ))}
@@ -144,8 +144,8 @@ export default function WeekView({
                   className="pointer-events-none absolute inset-x-0 z-20"
                   style={{ top: (nowMin - fromHour * 60) * (HOUR_PX / 60) }}
                 >
-                  <div className="relative h-px bg-[#f28b82] shadow-[0_0_8px_#f28b8299]">
-                    <span className="absolute -left-[3.5px] -top-[3.5px] h-[8px] w-[8px] rounded-full bg-[#f28b82] shadow-[0_0_8px_#f28b82]" />
+                  <div className="relative h-px bg-[#ff5c5c] shadow-[0_0_12px_#ff5c5ccc]">
+                    <span className="absolute -left-[3.5px] -top-[3.5px] h-[8px] w-[8px] rounded-full bg-[#ff5c5c] shadow-[0_0_12px_#ff5c5c]" />
                   </div>
                 </div>
               )}
@@ -193,25 +193,25 @@ function EventBlock({
         height,
         left: `calc(${p.col * width}% + 2px)`,
         width: `calc(${width}% - 4px)`,
-        background: live ? `${e.color}33` : `${e.color}1f`,
-        boxShadow: `inset 2px 0 0 ${e.color}${live ? "" : "cc"}${
-          live ? `, 0 0 18px ${e.color}30` : ""
-        }`,
-        opacity: past && !live ? 0.4 : 1,
+        background: live ? `${e.color}4d` : `${e.color}30`,
+        boxShadow: live
+          ? `inset 3px 0 0 ${e.color}, 0 0 22px ${e.color}55, inset 0 0 0 1px ${e.color}66`
+          : `inset 3px 0 0 ${e.color}, inset 0 0 0 1px ${e.color}33`,
+        opacity: past && !live ? 0.55 : 1,
         borderTopLeftRadius: p.continuesBefore ? 0 : undefined,
         borderBottomLeftRadius: p.continuesAfter ? 0 : undefined,
       }}
     >
       <div
         className={`truncate text-[0.74rem] leading-[1.15] ${
-          live ? "font-medium text-white" : "font-normal"
+          live ? "font-semibold text-white" : "font-medium"
         }`}
-        style={{ color: live ? undefined : "#e8eaed" }}
+        style={{ color: live ? undefined : "#f2f5f9" }}
       >
         {e.title}
       </div>
       {!compact && (
-        <div className="nums truncate text-[0.64rem] font-light leading-tight text-white/45">
+        <div className="nums truncate text-[0.64rem] font-light leading-tight text-white/65">
           {s.time}
           {s.suffix}
           {e.location ? ` · ${e.location}` : ""}

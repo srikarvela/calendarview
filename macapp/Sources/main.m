@@ -123,9 +123,9 @@ static NSDictionary<NSString *, NSString *> *ColorMap(void) {
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         map = @{
-            @"1" : @"#8ab4f8", @"2" : @"#7ddba3", @"3" : @"#c58af9", @"4" : @"#ff8a80",
-            @"5" : @"#fdd663", @"6" : @"#ffa76a", @"7" : @"#78d9ec", @"8" : @"#9aa0a6",
-            @"9" : @"#7a9dfb", @"10" : @"#81c995", @"11" : @"#f28b82",
+            @"1" : @"#5b9dff", @"2" : @"#2ee6a8", @"3" : @"#c77dff", @"4" : @"#ff6b8a",
+            @"5" : @"#ffd60a", @"6" : @"#ff9f45", @"7" : @"#22d3ee", @"8" : @"#a8b3c4",
+            @"9" : @"#6d7dff", @"10" : @"#3ddc84", @"11" : @"#ff5c5c",
         };
     });
     return map;
@@ -193,7 +193,7 @@ static NSDictionary<NSString *, NSString *> *ColorMap(void) {
             NSString *calID = cal[@"id"];
             if (calID.length == 0) continue;
 
-            NSString *calColor = ColorMap()[cal[@"colorId"] ?: @""] ?: cal[@"backgroundColor"] ?: @"#8ab4f8";
+            NSString *calColor = ColorMap()[cal[@"colorId"] ?: @""] ?: cal[@"backgroundColor"] ?: @"#5b9dff";
             NSString *calName = cal[@"summary"] ?: calID;
 
             dispatch_group_enter(group);

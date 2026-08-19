@@ -169,7 +169,7 @@ function buildModel(events: CalEvent[], now: Date | null): Model {
     current: null,
     currentId: null,
     next: null,
-    accent: "#8ab4f8",
+    accent: "#5b9dff",
     todayCount: 0,
     bookedMs: 0,
     freeAfter: null,
@@ -222,7 +222,7 @@ function buildModel(events: CalEvent[], now: Date | null): Model {
     current,
     currentId: current?.id ?? next?.id ?? null,
     next,
-    accent: current?.color ?? next?.color ?? "#8ab4f8",
+    accent: current?.color ?? next?.color ?? "#5b9dff",
     todayCount: timedToday.length,
     bookedMs,
     freeAfter,
@@ -236,9 +236,9 @@ function Ambience({ accent }: { accent: string }) {
     <div aria-hidden className="pointer-events-none absolute inset-0">
       <div
         className="absolute -left-[15%] -top-[25%] h-[70vh] w-[70vh] rounded-full blur-[130px] transition-colors duration-[2000ms]"
-        style={{ background: `radial-gradient(circle, ${accent}22, transparent 68%)` }}
+        style={{ background: `radial-gradient(circle, ${accent}3a, transparent 66%)` }}
       />
-      <div className="absolute -bottom-[30%] right-[-10%] h-[60vh] w-[60vh] rounded-full bg-[radial-gradient(circle,#ffffff0a,transparent_70%)] blur-[120px]" />
+      <div className="absolute -bottom-[30%] right-[-10%] h-[60vh] w-[60vh] rounded-full bg-[radial-gradient(circle,#ffffff12,transparent_70%)] blur-[120px]" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,#00000055)]" />
     </div>
   );
@@ -254,12 +254,12 @@ function Clock({ now, model }: { now: Date | null; model: Model }) {
           <h1 className="nums text-[clamp(4.5rem,11vw,10.5rem)] font-extralight leading-[0.85] tracking-[-0.045em] text-white">
             {t ? t.time : "--:--"}
           </h1>
-          <span className="text-[clamp(1rem,1.7vw,1.6rem)] font-light lowercase text-white/35">
+          <span className="text-[clamp(1rem,1.7vw,1.6rem)] font-light lowercase text-white/50">
             {t?.suffix}
           </span>
         </div>
 
-        <p className="mt-5 text-[clamp(0.95rem,1.35vw,1.35rem)] font-light tracking-[0.02em] text-white/45">
+        <p className="mt-5 text-[clamp(0.95rem,1.35vw,1.35rem)] font-light tracking-[0.02em] text-white/60">
           {now
             ? now.toLocaleDateString(undefined, {
                 weekday: "long",
@@ -272,7 +272,7 @@ function Clock({ now, model }: { now: Date | null; model: Model }) {
 
       <NowCard model={model} now={now} />
 
-      <div className="nums flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.78rem] font-light tracking-[0.08em] text-white/25">
+      <div className="nums flex flex-wrap items-center gap-x-5 gap-y-1 text-[0.78rem] font-light tracking-[0.08em] text-white/45">
         <span>{model.todayCount === 0 ? "NOTHING SCHEDULED" : `${model.todayCount} EVENTS`}</span>
         {model.bookedMs > 0 && <span>{fmtDuration(model.bookedMs).toUpperCase()} BOOKED</span>}
         {model.freeAfter && (
@@ -303,9 +303,9 @@ function NowCard({ model, now }: { model: Model; now: Date | null }) {
         <div className="mb-3 flex items-center gap-2.5">
           <span
             className="pulse-dot h-[7px] w-[7px] rounded-full"
-            style={{ background: current.color, boxShadow: `0 0 12px ${current.color}` }}
+            style={{ background: current.color, boxShadow: `0 0 16px ${current.color}, 0 0 5px ${current.color}` }}
           />
-          <span className="text-[0.7rem] font-medium tracking-[0.22em] text-white/45">
+          <span className="text-[0.7rem] font-medium tracking-[0.24em] text-white/70">
             HAPPENING NOW
           </span>
         </div>
@@ -314,11 +314,11 @@ function NowCard({ model, now }: { model: Model; now: Date | null }) {
           {current.title}
         </p>
 
-        <p className="nums mt-2.5 text-[0.95rem] font-light text-white/40">
+        <p className="nums mt-2.5 text-[0.95rem] font-light text-white/60">
           {fmtRange(current)} · {fmtDuration(end.getTime() - now.getTime())} left
         </p>
 
-        <div className="mt-5 h-[2px] w-full max-w-md overflow-hidden rounded-full bg-white/8">
+        <div className="mt-5 h-[3px] w-full max-w-md overflow-hidden rounded-full bg-white/12">
           <div
             className="h-full rounded-full transition-[width] duration-1000 ease-linear"
             style={{ width: `${pct}%`, background: current.color }}
@@ -332,22 +332,25 @@ function NowCard({ model, now }: { model: Model; now: Date | null }) {
     return (
       <div className="rise my-8 max-w-xl">
         <div className="mb-3 flex items-center gap-2.5">
-          <span className="h-[7px] w-[7px] rounded-full bg-white/25" />
-          <span className="text-[0.7rem] font-medium tracking-[0.22em] text-white/40">
+          <span
+            className="h-[7px] w-[7px] rounded-full"
+            style={{ background: next.color, boxShadow: `0 0 12px ${next.color}` }}
+          />
+          <span className="text-[0.7rem] font-medium tracking-[0.24em] text-white/60">
             UP NEXT · {untilLabel(now, parseStart(next)).toUpperCase()}
           </span>
         </div>
-        <p className="text-[clamp(1.4rem,2.4vw,2.3rem)] font-light leading-tight tracking-[-0.02em] text-white/85">
+        <p className="text-[clamp(1.4rem,2.4vw,2.3rem)] font-light leading-tight tracking-[-0.02em] text-white/95">
           {next.title}
         </p>
-        <p className="nums mt-2.5 text-[0.95rem] font-light text-white/35">{fmtRange(next)}</p>
+        <p className="nums mt-2.5 text-[0.95rem] font-light text-white/55">{fmtRange(next)}</p>
       </div>
     );
   }
 
   return (
     <div className="rise my-8">
-      <p className="text-[clamp(1.3rem,2.2vw,2rem)] font-light tracking-[-0.02em] text-white/30">
+      <p className="text-[clamp(1.3rem,2.2vw,2rem)] font-light tracking-[-0.02em] text-white/45">
         Clear for the rest of the day.
       </p>
     </div>
@@ -368,14 +371,14 @@ function Agenda({
   return (
     <section className="no-scrollbar relative min-w-0 overflow-y-auto [mask-image:linear-gradient(180deg,transparent,#000_3%,#000_94%,transparent)]">
       {model.days.length === 0 && (
-        <p className="mt-[30vh] text-center text-[1rem] font-light text-white/20">
+        <p className="mt-[30vh] text-center text-[1rem] font-light text-white/35">
           No events in the next week.
         </p>
       )}
 
       {model.days.map((day, di) => (
         <div key={day.key} className="rise mb-9" style={{ animationDelay: `${di * 60}ms` }}>
-          <h2 className="sticky top-0 z-10 bg-void/85 py-2 text-[0.7rem] font-medium tracking-[0.22em] text-white/30 backdrop-blur-sm">
+          <h2 className="sticky top-0 z-10 bg-void/85 py-2 text-[0.7rem] font-medium tracking-[0.24em] text-white/50 backdrop-blur-sm">
             {day.label.toUpperCase()}
           </h2>
 
@@ -386,9 +389,9 @@ function Agenda({
                   key={e.id}
                   className="rounded-full px-3 py-1 text-[0.8rem] font-light"
                   style={{
-                    background: `${e.color}1a`,
+                    background: `${e.color}26`,
                     color: e.color,
-                    boxShadow: `inset 0 0 0 1px ${e.color}33`,
+                    boxShadow: `inset 0 0 0 1px ${e.color}59, 0 0 14px ${e.color}26`,
                   }}
                 >
                   {e.title}
@@ -441,33 +444,35 @@ function EventRow({
       <div
         ref={rowRef}
         className={`group relative flex gap-5 rounded-xl px-4 py-3.5 transition-colors duration-500 ${
-          isCurrent ? "bg-white/[0.045]" : ""
-        } ${past ? "opacity-30" : ""}`}
+          isCurrent ? "bg-white/[0.07]" : ""
+        } ${past ? "opacity-45" : ""}`}
       >
         <span
           aria-hidden
-          className="absolute left-0 top-3.5 bottom-3.5 w-[2px] rounded-full transition-all"
+          className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full transition-all"
           style={{
             background: event.color,
-            opacity: isCurrent ? 1 : 0.45,
-            boxShadow: isCurrent ? `0 0 14px ${event.color}` : "none",
+            opacity: isCurrent ? 1 : 0.85,
+            boxShadow: isCurrent
+              ? `0 0 18px ${event.color}, 0 0 6px ${event.color}`
+              : `0 0 10px ${event.color}66`,
           }}
         />
 
         <div className="nums w-[4.5rem] shrink-0 pt-[0.15rem] text-right">
-          <span className="text-[1.05rem] font-light text-white/75">{s.time}</span>
-          <span className="ml-0.5 text-[0.7rem] font-light text-white/30">{s.suffix}</span>
+          <span className="text-[1.05rem] font-light text-white/90">{s.time}</span>
+          <span className="ml-0.5 text-[0.7rem] font-light text-white/50">{s.suffix}</span>
         </div>
 
         <div className="min-w-0 flex-1">
           <p
             className={`truncate text-[1.08rem] font-light tracking-[-0.01em] ${
-              isCurrent ? "text-white" : "text-white/85"
+              isCurrent ? "text-white" : "text-white/92"
             }`}
           >
             {event.title}
           </p>
-          <p className="nums mt-1 truncate text-[0.8rem] font-light text-white/30">
+          <p className="nums mt-1 truncate text-[0.8rem] font-light text-white/50">
             {fmtDuration(end.getTime() - start.getTime())}
             {meta.length > 0 && ` · ${meta.join(" · ")}`}
           </p>
@@ -535,16 +540,16 @@ function Controls({
 }) {
   return (
     <div
-      className={`absolute bottom-5 right-6 flex items-center gap-4 text-[0.72rem] font-light tracking-[0.1em] text-white/30 transition-opacity duration-700 ${
+      className={`absolute bottom-5 right-6 flex items-center gap-4 text-[0.72rem] font-light tracking-[0.1em] text-white/45 transition-opacity duration-700 ${
         idle ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
     >
-      {stale && <span className="text-amber-300/50">OFFLINE</span>}
-      {demo && <span className="text-white/25">DEMO DATA</span>}
+      {stale && <span className="text-[#ffd60a]/80">OFFLINE</span>}
+      {demo && <span className="text-white/40">DEMO DATA</span>}
       <button onClick={onRefresh} className="transition-colors hover:text-white/70">
         REFRESH
       </button>
-      <span className="text-white/15">
+      <span className="text-white/30">
         {view === "day" ? "W WEEK" : "D DAY · ← → WEEKS"} · F FULLSCREEN
       </span>
       {!demo && (
