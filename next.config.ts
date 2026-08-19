@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // The display is meant to be looked at, not debugged over.
+  devIndicators: false,
 };
 
 export default nextConfig;
