@@ -9,22 +9,45 @@ cd "$(dirname "$0")"
 
 APP_NAME="CalendarView"
 BUNDLE_ID="com.calendarview.app"
-VERSION="${VERSION:-1.0.0}"
-BUILD_NUM="${BUILD_NUM:-1}"
+VERSION="${VERSION:-1.1.0}"
+BUILD_NUM="${BUILD_NUM:-2}"
 MIN_MACOS="11.0"
 
 BUILD="build"
 APP="$BUILD/$APP_NAME.app"
 DMG="$BUILD/$APP_NAME-$VERSION.dmg"
 
+# The Google OAuth client is baked in at build time, so the app never asks
+# anyone to paste a key. Provide it once, either way:
+#   GOOGLE_CLIENT_ID=... ./macapp/build.sh
+#   echo "...apps.googleusercontent.com" > macapp/client_id.txt
+if [ -z "${GOOGLE_CLIENT_ID:-}" ] && [ -f client_id.txt ]; then
+  GOOGLE_CLIENT_ID="$(tr -d '[:space:]' < client_id.txt)"
+fi
+
+if [ -z "${GOOGLE_CLIENT_ID:-}" ]; then
+  echo "!! No GOOGLE_CLIENT_ID set — building anyway, but sign-in will not work."
+  echo "   See the README: Set up Google sign-in (once)."
+  echo
+elif ! printf '%s' "$GOOGLE_CLIENT_ID" | grep -q '\.apps\.googleusercontent\.com$'; then
+  echo "!! GOOGLE_CLIENT_ID does not look like a Google client ID"
+  echo "   (expected it to end in .apps.googleusercontent.com)" >&2
+  exit 1
+fi
+
 rm -rf "$BUILD"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
+
+echo "==> Bundling the interface"
+( cd .. && npm run --silent build:web )
+cp -R Resources/web "$APP/Contents/Resources/web"
 
 echo "==> Compiling universal binary (arm64 + x86_64)"
 clang -fobjc-arc -O2 \
   -arch arm64 -arch x86_64 \
   -mmacosx-version-min="$MIN_MACOS" \
   -framework AppKit -framework WebKit -framework ServiceManagement \
+  -framework AuthenticationServices -framework Security \
   -o "$APP/Contents/MacOS/$APP_NAME" \
   Sources/main.m
 
@@ -60,10 +83,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
     <key>LSUIElement</key>               <true/>
     <key>NSHighResolutionCapable</key>   <true/>
     <key>NSHumanReadableCopyright</key>  <string>CalendarView</string>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsLocalNetworking</key><true/>
-    </dict>
+    <key>GoogleClientID</key>            <string>${GOOGLE_CLIENT_ID:-}</string>
 </dict>
 </plist>
 PLIST

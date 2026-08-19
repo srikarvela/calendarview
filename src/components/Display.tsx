@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { rememberView, useNow, useStoredView, type View } from "@/lib/client-state";
-import { signOutAction } from "@/app/actions";
-import type { CalEvent, EventsPayload } from "@/lib/types";
+import type { Actions, Snapshot } from "@/lib/source";
+import type { CalEvent } from "@/lib/types";
 import WeekView from "./WeekView";
 import { weekDays } from "@/lib/layout";
 import {
@@ -18,19 +18,22 @@ import {
   untilLabel,
 } from "@/lib/time";
 
-const REFRESH_MS = 60_000;
 const IDLE_MS = 3_000;
 
 export default function Display({
+  snapshot,
+  actions,
   demo = false,
   initialView,
 }: {
+  snapshot: Snapshot;
+  actions: Actions;
   demo?: boolean;
   initialView?: "day" | "week";
 }) {
   const now = useNow();
-  const [events, setEvents] = useState<CalEvent[] | null>(null);
-  const [stale, setStale] = useState(false);
+  const events = snapshot.events;
+  const stale = Boolean(snapshot.stale);
   const [idle, setIdle] = useState(false);
   const [offset, setOffset] = useState(0); // weeks from the current week
   const nowRef = useRef<HTMLDivElement>(null);
@@ -45,33 +48,7 @@ export default function Display({
     rememberView(next);
   }, []);
 
-  const load = useCallback(async () => {
-    try {
-      const res = await fetch(`/api/events${demo ? "?demo=1" : ""}`, { cache: "no-store" });
-      if (!res.ok) throw new Error(String(res.status));
-      const data: EventsPayload = await res.json();
-      setEvents(data.events);
-      setStale(false);
-    } catch {
-      setStale(true);
-    }
-  }, [demo]);
-
-  useEffect(() => {
-    // load() only touches state after awaiting the fetch, so this is not a
-    // synchronous setState — the rule cannot see through the await.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    load();
-    const id = setInterval(load, REFRESH_MS);
-    const onVisible = () => document.visibilityState === "visible" && load();
-    document.addEventListener("visibilitychange", onVisible);
-    window.addEventListener("focus", load);
-    return () => {
-      clearInterval(id);
-      document.removeEventListener("visibilitychange", onVisible);
-      window.removeEventListener("focus", load);
-    };
-  }, [load]);
+  const load = actions.refresh;
 
   // Hide the cursor and the controls once you stop touching it.
   useEffect(() => {
@@ -135,7 +112,7 @@ export default function Display({
     return date;
   }, [offset, todayKey]);
 
-  const model = useMemo(() => buildModel(events ?? [], now), [events, now]);
+  const model = useMemo(() => buildModel(events, now), [events, now]);
 
   useEffect(() => {
     nowRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
@@ -154,12 +131,19 @@ export default function Display({
         <div className="relative flex h-full flex-col px-[2.5vw] pb-[3vh] pt-[4vh]">
           <WeekHeader now={now} anchor={anchor} offset={offset} />
           <div className="min-h-0 flex-1">
-            {now && <WeekView events={events ?? []} now={now} anchor={anchor} />}
+            {now && <WeekView events={events} now={now} anchor={anchor} />}
           </div>
         </div>
       )}
 
-      <Controls idle={idle} demo={demo} stale={stale} view={view} onRefresh={load} />
+      <Controls
+        idle={idle}
+        demo={demo}
+        stale={stale}
+        view={view}
+        onRefresh={load}
+        onSignOut={actions.signOut}
+      />
     </main>
   );
 }
@@ -540,12 +524,14 @@ function Controls({
   stale,
   view,
   onRefresh,
+  onSignOut,
 }: {
   idle: boolean;
   demo: boolean;
   stale: boolean;
   view: "day" | "week";
   onRefresh: () => void;
+  onSignOut: () => void;
 }) {
   return (
     <div
@@ -562,11 +548,9 @@ function Controls({
         {view === "day" ? "W WEEK" : "D DAY · ← → WEEKS"} · F FULLSCREEN
       </span>
       {!demo && (
-        <form action={signOutAction}>
-          <button type="submit" className="transition-colors hover:text-white/70">
-            SIGN OUT
-          </button>
-        </form>
+        <button onClick={onSignOut} className="transition-colors hover:text-white/70">
+          SIGN OUT
+        </button>
       )}
     </div>
   );

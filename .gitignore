@@ -43,3 +43,7 @@ next-env.d.ts
 
 # mac app build output
 macapp/build/
+
+# baked into the build, never committed
+macapp/client_id.txt
+macapp/Resources/web/

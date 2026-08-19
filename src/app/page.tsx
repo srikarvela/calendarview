@@ -1,27 +1,17 @@
-import Display from "@/components/Display";
-import Gate from "@/components/Gate";
+import DemoHost from "@/components/DemoHost";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * The web entry point is a design harness only — the real app is the Mac
+ * app in `macapp/`, which signs into Google natively and needs no server.
+ */
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ demo?: string; view?: string }>;
+  searchParams: Promise<{ view?: string; gate?: string }>;
 }) {
-  const { demo, view } = await searchParams;
+  const { view, gate } = await searchParams;
   const initialView = view === "week" || view === "day" ? view : undefined;
-
-  if (demo === "1") return <Display demo initialView={initialView} />;
-
-  const configured = Boolean(
-    process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET && process.env.AUTH_SECRET,
-  );
-  if (!configured) return <Gate configured={false} />;
-
-  // Only import auth once the env is present — otherwise Auth.js throws on init.
-  const { auth } = await import("@/auth");
-  const session = await auth();
-  if (!session || session.error) return <Gate configured />;
-
-  return <Display initialView={initialView} />;
+  return <DemoHost initialView={initialView} gate={gate === "1"} />;
 }
